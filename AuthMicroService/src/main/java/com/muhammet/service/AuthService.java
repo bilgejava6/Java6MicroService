@@ -7,6 +7,7 @@ import com.muhammet.exception.EErrorType;
 import com.muhammet.mapper.IAuthMapper;
 import com.muhammet.repository.IAuthRepository;
 import com.muhammet.repository.entity.Auth;
+import com.muhammet.utility.JwtTokenManager;
 import com.muhammet.utility.ServiceManager;
 import com.muhammet.utility.TokenManager;
 import org.springframework.stereotype.Service;
@@ -17,8 +18,8 @@ import java.util.Optional;
 @Service
 public class AuthService extends ServiceManager<Auth,Long> {
     private final IAuthRepository repository;
-    private final TokenManager tokenManager;
-    public  AuthService(IAuthRepository repository,TokenManager tokenManager){
+    private final JwtTokenManager tokenManager;
+    public  AuthService(IAuthRepository repository,JwtTokenManager tokenManager){
         super(repository);
         this.repository=repository;
         this.tokenManager = tokenManager;
@@ -51,17 +52,14 @@ public class AuthService extends ServiceManager<Auth,Long> {
         Optional<Auth> auth = repository.findOptionalByUsernameAndPassword(dto.getUsername(),dto.getPassword());
         if(auth.isEmpty())
             throw new AuthServiceException(EErrorType.LOGIN_ERROR_USERNAME_PASSWORD);
-        return tokenManager.createToken(auth.get().getId());
+        return tokenManager.createToken(auth.get().getId()).get();
     }
 
     public List<Auth> findAll(String token){
-        Long id=null;
-        try{
-            id = tokenManager.getIdByToken(token);
-        }catch (Exception exception){
+        Optional<Long> id= tokenManager.getByIdFromToken(token);
+        if(id.isEmpty())
             throw new AuthServiceException(EErrorType.INVALID_TOKEN);
-        }
-        if(findById(id).isEmpty())
+        if(findById(id.get()).isEmpty())
             throw new AuthServiceException(EErrorType.INVALID_TOKEN);
         return findAll();
     }

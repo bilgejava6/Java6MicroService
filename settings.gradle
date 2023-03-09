@@ -1,3 +1,6 @@
 rootProject.name = 'Java6MicroService'
 include 'AuthMicroService'
+include 'UserProfileMicroService'
+include 'ProductMicroService'
+include 'SalesMicroService'
 
