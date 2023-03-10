@@ -2,8 +2,10 @@ package com.muhammet.service;
 
 import com.muhammet.dto.request.DoLoginRequestDto;
 import com.muhammet.dto.request.RegisterRequestDto;
+import com.muhammet.dto.request.UserProfileSaveRequestDto;
 import com.muhammet.exception.AuthServiceException;
 import com.muhammet.exception.EErrorType;
+import com.muhammet.manager.IUserProfileManager;
 import com.muhammet.mapper.IAuthMapper;
 import com.muhammet.repository.IAuthRepository;
 import com.muhammet.repository.entity.Auth;
@@ -19,10 +21,14 @@ import java.util.Optional;
 public class AuthService extends ServiceManager<Auth,Long> {
     private final IAuthRepository repository;
     private final JwtTokenManager tokenManager;
-    public  AuthService(IAuthRepository repository,JwtTokenManager tokenManager){
+    private final IUserProfileManager iUserProfileManager;
+    public  AuthService(IAuthRepository repository,
+                        JwtTokenManager tokenManager,
+                        IUserProfileManager iUserProfileManager){
         super(repository);
         this.repository=repository;
         this.tokenManager = tokenManager;
+        this.iUserProfileManager=iUserProfileManager;
     }
 
     public Auth register(RegisterRequestDto dto){
@@ -34,7 +40,9 @@ public class AuthService extends ServiceManager<Auth,Long> {
          * Servi-> save(auth) bana kaydettiği entity döner
          * direkt -> auth, bir şekilde kayıt edilen entity nin bilgileri işlenir ve bunu döner
          */
-        return save(auth);
+        save(auth);
+        iUserProfileManager.save(IAuthMapper.INSTANCE.fromAuth(auth));
+        return auth;
         //return repository.save(auth);
     }
     public Optional<Auth> findOptionalByUsernameAndPassword(String username, String password){

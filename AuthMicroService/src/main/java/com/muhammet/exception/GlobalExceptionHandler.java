@@ -10,6 +10,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
+import javax.lang.model.type.ErrorType;
+import java.util.ArrayList;
+import java.util.List;
+
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -66,15 +70,21 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(createErrorMessage(errorType,exception),errorType.getHttpStatus());
     }
 
-    /**
-     * http://localhost:9090/urun/findbyid/234/sort/desc
-     * http://localhost:9090/urun/findbyid/sort/desc
-     */
-
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseBody
-    public ResponseEntity<ErrorMessage> handleMethodArgumentNotValidException(MethodArgumentNotValidException exception){
-        EErrorType errorType = EErrorType.METHOD_NOT_VALID_ARGUMENT_ERROR;
-        return new ResponseEntity<>(createErrorMessage(errorType,exception),errorType.getHttpStatus());
+    public final ResponseEntity<ErrorMessage> handleMethodArgumentNotValidException(
+            MethodArgumentNotValidException exception) {
+
+        EErrorType errorType = EErrorType.INVALID_PARAMETER;
+        List<String> fields = new ArrayList<>();
+        exception
+                .getBindingResult()
+                .getFieldErrors()
+                .forEach(e -> fields.add(e.getField() + ": " + e.getDefaultMessage()));
+        ErrorMessage errorMessage = createErrorMessage(errorType,exception);
+        errorMessage.setFields(fields);
+        return new ResponseEntity<>(errorMessage, errorType.getHttpStatus());
     }
+
+
 }
