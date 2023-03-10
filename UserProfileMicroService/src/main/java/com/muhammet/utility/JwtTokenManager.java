@@ -17,8 +17,7 @@ public class JwtTokenManager {
     String secretKey;
     @Value("${authservice.bunu-ben-yazdim.issuer}")
     String issuer;
-    @Value("${ornek.deger3}")
-    String dikkat;
+
     public Optional<String> createToken(Long id){
         String token= null;
         Long exDate = 1000L*60;
