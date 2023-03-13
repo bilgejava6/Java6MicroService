@@ -3,4 +3,7 @@ include 'AuthMicroService'
 include 'UserProfileMicroService'
 include 'ProductMicroService'
 include 'SalesMicroService'
+include 'ConfigServer'
+include 'ConfigServerGit'
+include 'ApiGatewayService'
 
