@@ -7,6 +7,8 @@ import com.muhammet.exception.AuthServiceException;
 import com.muhammet.exception.EErrorType;
 import com.muhammet.manager.IUserProfileManager;
 import com.muhammet.mapper.IAuthMapper;
+import com.muhammet.rabbitmq.model.SaveAuthModel;
+import com.muhammet.rabbitmq.producer.CreateUserProducer;
 import com.muhammet.repository.IAuthRepository;
 import com.muhammet.repository.entity.Auth;
 import com.muhammet.utility.JwtTokenManager;
@@ -21,14 +23,17 @@ import java.util.Optional;
 public class AuthService extends ServiceManager<Auth,Long> {
     private final IAuthRepository repository;
     private final JwtTokenManager tokenManager;
+    private final CreateUserProducer createUserProducer;
     private final IUserProfileManager iUserProfileManager;
     public  AuthService(IAuthRepository repository,
                         JwtTokenManager tokenManager,
-                        IUserProfileManager iUserProfileManager){
+                        IUserProfileManager iUserProfileManager,
+                        CreateUserProducer createUserProducer){
         super(repository);
         this.repository=repository;
         this.tokenManager = tokenManager;
         this.iUserProfileManager=iUserProfileManager;
+        this.createUserProducer=createUserProducer;
     }
 
     public Auth register(RegisterRequestDto dto){
@@ -41,7 +46,12 @@ public class AuthService extends ServiceManager<Auth,Long> {
          * direkt -> auth, bir şekilde kayıt edilen entity nin bilgileri işlenir ve bunu döner
          */
         save(auth);
-        iUserProfileManager.save(IAuthMapper.INSTANCE.fromAuth(auth));
+        //iUserProfileManager.save(IAuthMapper.INSTANCE.fromAuth(auth));
+        createUserProducer.convertAndSend(SaveAuthModel.builder()
+                        .authid(auth.getId())
+                        .email(auth.getEmail())
+                        .username(auth.getUsername())
+                .build());
         return auth;
         //return repository.save(auth);
     }
