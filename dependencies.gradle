@@ -23,10 +23,14 @@ ext{
      * 7. Version numarası (v.0.01) ya da yukarıda belirtilen version adını ekliyoruz. ($versions.springBoot)
      */
     libs = [
-        springBootWeb           : "org.springframework.boot:spring-boot-starter-web:$versions.springBoot",
-        springBootDataJpa       : "org.springframework.boot:spring-boot-starter-data-jpa:$versions.springBoot",
-        springBootValidation    : "org.springframework.boot:spring-boot-starter-validation:$versions.springBoot",
-        springBootAmqp          : "org.springframework.boot:spring-boot-starter-amqp:$versions.springBoot",
+        springBootWeb                   : "org.springframework.boot:spring-boot-starter-web:$versions.springBoot",
+        springBootDataJpa               : "org.springframework.boot:spring-boot-starter-data-jpa:$versions.springBoot",
+        springBootStarterRedis          : "org.springframework.boot:spring-boot-starter-data-redis:$versions.springBoot",
+        springBootStarterElasticsearch  : "org.springframework.boot:spring-boot-starter-data-elasticsearch:$versions.springBoot",
+        springBootValidation            : "org.springframework.boot:spring-boot-starter-validation:$versions.springBoot",
+        springBootAmqp                  : "org.springframework.boot:spring-boot-starter-amqp:$versions.springBoot",
+
+
 
         springCloudOpenFeign    : "org.springframework.cloud:spring-cloud-starter-openfeign:$versions.springCloud",
 

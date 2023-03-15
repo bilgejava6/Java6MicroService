@@ -21,6 +21,11 @@ spring:
     hibernate:
       ddl-auto: update
 
+user-service:
+  redis:
+    host: localhost
+    port: 6379
+
 authservice:
   bunu-ben-yazdim:
     secret-key: ${JAVA_SECRETKEY}
