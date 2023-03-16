@@ -11,6 +11,7 @@
         <module name="Java6MicroService.ProductMicroService.main" />
         <module name="Java6MicroService.SalesMicroService.main" />
         <module name="Java6MicroService.UserProfileMicroService.main" />
+        <module name="Java6MicroService.ElasticMicroService.main" />
         <module name="Java6MicroService.ApiGatewayService.main" />
         <module name="Java6MicroService.ConfigServer.main" />
         <module name="Java6MicroService.AuthMicroService.main" />
