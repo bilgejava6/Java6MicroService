@@ -1,7 +1,9 @@
 package com.muhammet.service;
 
 import com.muhammet.dto.request.UserProfileSaveRequestDto;
+import com.muhammet.manager.IElasticServisManager;
 import com.muhammet.mapper.IUserProfileMapper;
+import com.muhammet.rabbitmq.model.SaveAuthModel;
 import com.muhammet.repository.IUserProfileRepository;
 import com.muhammet.repository.entity.UserProfile;
 import com.muhammet.utility.ServiceManager;
@@ -12,14 +14,23 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserProfileService extends ServiceManager<UserProfile,Long> {
     private final IUserProfileRepository repository;
-    public UserProfileService(IUserProfileRepository repository){
+    private final IElasticServisManager elasticServisManager;
+    public UserProfileService(IUserProfileRepository repository,
+                              IElasticServisManager elasticServisManager){
         super(repository);
         this.repository=repository;
+        this.elasticServisManager=elasticServisManager;
     }
 
     public Boolean saveDto(UserProfileSaveRequestDto dto) {
         save(IUserProfileMapper.INSTANCE.toUserProfile(dto));
         return true;
+    }
+
+    public void saveRabbit(SaveAuthModel model){
+        UserProfile profile = IUserProfileMapper.INSTANCE.toUserProfile(model);
+        save(profile);
+        elasticServisManager.addUser(profile);
     }
 
     /**

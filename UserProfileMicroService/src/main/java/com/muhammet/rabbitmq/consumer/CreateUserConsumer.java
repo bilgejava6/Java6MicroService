@@ -10,16 +10,10 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class CreateUserConsumer {
-
     private final UserProfileService userProfileService;
-
     @RabbitListener(queues = "queue-auth")
     public void createUserFromHandleQueue(SaveAuthModel model){
         System.out.println("Gelen Data...: "+ model.getUsername());
-        userProfileService.save(UserProfile.builder()
-                        .authid(model.getAuthid())
-                        .username(model.getUsername())
-                        .email(model.getEmail())
-                .build());
+        userProfileService.saveRabbit(model);
     }
 }

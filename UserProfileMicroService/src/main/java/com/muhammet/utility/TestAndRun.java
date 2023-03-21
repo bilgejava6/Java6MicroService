@@ -24,7 +24,7 @@ public class TestAndRun {
 //        new Thread(()->{
 //            run();
 //        });
-        //run();
+        run();
     }
     public void run(){
         List<UserProfile> list = userProfileService.findAll();

@@ -1,9 +1,11 @@
 package com.muhammet.controller;
 
 import com.muhammet.dto.request.AddUserRequestDto;
+import com.muhammet.dto.request.BaseRequestDto;
 import com.muhammet.repository.entity.UserProfile;
 import com.muhammet.service.UserProfileService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,4 +25,10 @@ public class UserProfieController {
     public ResponseEntity<Iterable<UserProfile>> findAll(){
      return  ResponseEntity.ok(userProfileService.findAll());
     }
+
+    @PostMapping(GETALLPAGE)
+    public ResponseEntity<Page<UserProfile>> findAll(@RequestBody BaseRequestDto dto){
+        return ResponseEntity.ok(userProfileService.findAll(dto));
+    }
+
 }
