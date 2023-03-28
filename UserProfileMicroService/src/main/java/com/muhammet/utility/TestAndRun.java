@@ -14,7 +14,7 @@ import java.util.List;
 public class TestAndRun {
     private final UserProfileService userProfileService;
     private final IElasticServisManager elasticServisManager;
-    @PostConstruct
+   // @PostConstruct
     public void init(){
         /**
          * Bu kısım kullanılacak ise, zorunlu durumlar için işiniz bitince
@@ -24,7 +24,7 @@ public class TestAndRun {
 //        new Thread(()->{
 //            run();
 //        });
-        run();
+        //run();
     }
     public void run(){
         List<UserProfile> list = userProfileService.findAll();

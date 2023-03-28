@@ -32,8 +32,6 @@ public class JwtTokenFilter extends OncePerRequestFilter {
          * Eğer Bearer token yok ise(null) hata fırlatırız.
          * Eğer gelen değerin içinde token yok ise hata fırlatırız.
          */
-
-
         if(SecurityContextHolder.getContext().getAuthentication()==null){
             if(BearerToken==null || !BearerToken.startsWith("Bearer "))
                 throw new ElasticServiceException(EErrorType.INVALID_TOKEN);
@@ -50,7 +48,6 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                     = new UsernamePasswordAuthenticationToken(userDetails,null,userDetails.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
         }
-
         filterChain.doFilter(request,response);
     }
 }

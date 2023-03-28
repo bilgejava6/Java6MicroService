@@ -7,6 +7,7 @@ import com.muhammet.service.UserProfileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import static com.muhammet.constants.EndPoints.*;
@@ -25,6 +26,19 @@ public class UserProfieController {
     public ResponseEntity<Iterable<UserProfile>> findAll(){
      return  ResponseEntity.ok(userProfileService.findAll());
     }
+
+    @GetMapping(GETALL_VIP)
+    @PreAuthorize("hasAuthority('VIP') or hasAuthority('OzelMusteri') ")
+    public ResponseEntity<Iterable<UserProfile>> findAllVip(){
+        return  ResponseEntity.ok(userProfileService.findAll());
+    }
+
+    @GetMapping(GETALL_BEN)
+    @PreAuthorize("hasAuthority('BEN')")
+    public ResponseEntity<Iterable<UserProfile>> findAllBen(){
+        return  ResponseEntity.ok(userProfileService.findAll());
+    }
+
 
     @PostMapping(GETALLPAGE)
     public ResponseEntity<Page<UserProfile>> findAll(@RequestBody BaseRequestDto dto){
